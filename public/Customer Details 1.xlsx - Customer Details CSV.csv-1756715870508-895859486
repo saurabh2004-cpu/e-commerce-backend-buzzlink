@@ -1,0 +1,109 @@
+"Reason for multiple entries for same customer is due to contact(name,email, phone)",,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,
+Text Field,Unique Customer ID,Customer Name,,,Dropdown Menu,Net Terms,,,,,,,,,,,,,Contact name,Contact Email,Contact Phone,Primary Brand,Default Shipping Rate,Text Field,Text Field,Tick Box
+,,,,,,,,,,,,,,,,,,,,,,,,,,
+Internal ID,ID,Name,Email,Phone,Category,Terms,Shipping Address 1,Shipping Address 2,Shipping Address 3,Shipping City,Shipping State/Province,Shipping Zip,Billing Address 1,Billing Address 2,Billing Address 3,Billing City,Billing State/Province,Billing Zip,Name,Email,Phone,Default Invoice Brand,Default Shipping Method,Order Approval ,Comments,Inactive
+1629,CUS000006,@HOME BUNDABERG,test1@gmail.com,(07) 1234 5678,Homeware Store,,34C QUAY STREET,,,BUNDABERG,QLD,4670,34C QUAY STREET,,,BUNDABERG,QLD,4670,LE-ISA PRATT,,,Asra Aromas,Flat Rate $40,LE-ISA,Please deliver between 9am - 5pm weekdays,No
+1629,CUS000006,@HOME BUNDABERG,test1@gmail.com,(07) 1234 5678,Homeware Store,,34C QUAY STREET,,,BUNDABERG,QLD,4670,34C QUAY STREET,,,BUNDABERG,QLD,4670,@HOME BUNDABERG,athomebundaberg@gmail.com,,,Flat Rate $40,LE-ISA,Please deliver between 9am - 5pm weekdays,No
+1629,CUS000006,@HOME BUNDABERG,test1@gmail.com,(07) 1234 5678,Homeware Store,,34C QUAY STREET,,,BUNDABERG,QLD,4670,34C QUAY STREET,,,BUNDABERG,QLD,4670,Office 2,shamanicmedicine.earth@gmail.com,,Asra Aromas,Flat Rate $40,LE-ISA,Please deliver between 9am - 5pm weekdays,No
+1631,CUS000008,3 WISHES PTY LTD,checking@3wishes.com.au,(08) 5678 1234,Homeware Store,,54 MAIN STREET,,,HAHNDORF,SA,5245,54 MAIN STREET,,,HAHNDORF,SA,5245,Office 2,shamanicmedicine.earth@gmail.com,,Asra Aromas,Flat Rate $50,CHRISTA/MIKAELA,Account Customer - Sent CA Form 23.02.16,No
+1631,CUS000008,3 WISHES PTY LTD,checking@3wishes.com.au,(08) 5678 1235,Homeware Store,,54 MAIN STREET,,,HAHNDORF,SA,5245,54 MAIN STREET,,,HAHNDORF,SA,5245,CHRISTA/MIKAELA LANG,,,Asra Aromas,Flat Rate $50,CHRISTA/MIKAELA,Account Customer - Sent CA Form 23.02.16,No
+1631,CUS000008,3 WISHES PTY LTD,checking@3wishes.com.au,(08) 5678 1236,Homeware Store,,54 MAIN STREET,,,HAHNDORF,SA,5245,54 MAIN STREET,,,HAHNDORF,SA,5245,3 WISHES PTY LTD,enquiries@3wishes.com.au,,Asra Aromas,Flat Rate $50,CHRISTA/MIKAELA,Account Customer - Sent CA Form 23.02.16,No
+1630,CUS000009,2inspire U,inspring@live.com.au,0412 123 456,Homeware Store,,The Shed 70 Napier Street,,,Deniliquin,NSW,2710,The Shed 70 Napier Street,,,Deniliquin,NSW,2710,2inspire U,2inspireu@live.com.au,,Asra Aromas,Flat Rate $35,Sharon,Proforma Customer,No
+1630,CUS000009,2inspire U,inspring@live.com.au,0412 123 456,Homeware Store,,The Shed 70 Napier Street,,,Deniliquin,NSW,2710,The Shed 70 Napier Street,,,Deniliquin,NSW,2710,Sharon Ferguson,,,Asra Aromas,Flat Rate $35,Sharon,Proforma Customer,No
+1630,CUS000009,2inspire U,inspring@live.com.au,0412 123 456,Homeware Store,,The Shed 70 Napier Street,,,Deniliquin,NSW,2710,The Shed 70 Napier Street,,,Deniliquin,NSW,2710,Nicholas Stamos,nick@pointaustralia.com.au,,Asra Aromas,Flat Rate $35,Sharon,Proforma Customer,No
+1630,CUS000009,2inspire U,inspring@live.com.au,0412 123 456,Homeware Store,,The Shed 70 Napier Street,,,Deniliquin,NSW,2710,The Shed 70 Napier Street,,,Deniliquin,NSW,2710,Office 2,shamanicmedicine.earth@gmail.com,,Asra Aromas,Flat Rate $35,Sharon,Proforma Customer,No
+1634,CUS000010,A Little Bit of Bali in Coffs,littlebit@hotmail.com,0413 456 777,Homeware Store,,4/80 Mildura Street,,,Coffs Harbour,NSW,2450,4/80 Mildura Street,,,Coffs Harbour,NSW,2450,Karen Hannant,,,Asra Aromas,Flat Rate $35,Karen,Proforma Customer,No
+1634,CUS000010,A Little Bit of Bali in Coffs,littlebit@hotmail.com,0413 456 777,Homeware Store,,4/80 Mildura Street,,,Coffs Harbour,NSW,2450,4/80 Mildura Street,,,Coffs Harbour,NSW,2450,A Little Bit of Bali in Coffs,karenhannant@hotmail.com,,Asra Aromas,Flat Rate $35,Karen,Proforma Customer,No
+1634,CUS000010,A Little Bit of Bali in Coffs,littlebit@hotmail.com,0413 456 777,Homeware Store,,4/80 Mildura Street,,,Coffs Harbour,NSW,2450,4/80 Mildura Street,,,Coffs Harbour,NSW,2450,Office 2,shamanicmedicine.earth@gmail.com,,Asra Aromas,Flat Rate $35,Karen,Proforma Customer,No
+2606,CUS000981,Choice The Discount Store Ashmore : Choice The Discount Store Broadbeach,what@choicediscountvariety.com.au,0411 444 555,Discount Store,30 Days,Shop 1.50-1.53 Oasis S/C,12 Charles Ave,,Broadbeach,QLD,4218,Shop 1.50-1.53 Oasis S/C,12 Charles Ave,,Broadbeach,QLD,4218,Raj Makanjee,raj@pointaustralia.com.au,,Asra Aromas,Free,"Rakesh - Owner 
+Shan - General Manager for all stores 
+shanj@choicediscountvariety.com.au 
+0452 217 426 
+ 
+Kasarah - Approval 
+kasarah@choicethediscountstore.com.au 
+ 
+Barcodes - invoices@choicediscountvariety.com.au","Account Customer - Owns 30+ stores 
+ 
+CHECK APPROVED LIST - Send to Shan and Kasarah for approval IF there are items ordered not on the approved list. 
+ 
+BARCODES",Yes
+2606,CUS000981,Choice The Discount Store Ashmore : Choice The Discount Store Broadbeach,what@choicediscountvariety.com.au,0411 444 555,Discount Store,30 Days,Shop 1.50-1.53 Oasis S/C,12 Charles Ave,,Broadbeach,QLD,4218,Shop 1.50-1.53 Oasis S/C,12 Charles Ave,,Broadbeach,QLD,4218,Rongo,broadbeach@choicediscountvariety.com.au,(07) 5538 4338,Asra Aromas,Free,"Rakesh - Owner 
+Shan - General Manager for all stores 
+shanj@choicediscountvariety.com.au 
+0452 217 426 
+ 
+Kasarah - Approval 
+kasarah@choicethediscountstore.com.au 
+ 
+Barcodes - invoices@choicediscountvariety.com.au","Account Customer - Owns 30+ stores 
+ 
+CHECK APPROVED LIST - Send to Shan and Kasarah for approval IF there are items ordered not on the approved list. 
+ 
+BARCODES",Yes
+2606,CUS000981,Choice The Discount Store Ashmore : Choice The Discount Store Broadbeach,what@choicediscountvariety.com.au,0411 444 555,Discount Store,30 Days,Shop 1.50-1.53 Oasis S/C,12 Charles Ave,,Broadbeach,QLD,4218,Shop 1.50-1.53 Oasis S/C,12 Charles Ave,,Broadbeach,QLD,4218,Office 2,shamanicmedicine.earth@gmail.com,,Asra Aromas,Free,"Rakesh - Owner 
+Shan - General Manager for all stores 
+shanj@choicediscountvariety.com.au 
+0452 217 426 
+ 
+Kasarah - Approval 
+kasarah@choicethediscountstore.com.au 
+ 
+Barcodes - invoices@choicediscountvariety.com.au","Account Customer - Owns 30+ stores 
+ 
+CHECK APPROVED LIST - Send to Shan and Kasarah for approval IF there are items ordered not on the approved list. 
+ 
+BARCODES",Yes
+2606,CUS000981,Choice The Discount Store Ashmore : Choice The Discount Store Broadbeach,what@choicediscountvariety.com.au,0411 444 555,Discount Store,30 Days,Shop 1.50-1.53 Oasis S/C,12 Charles Ave,,Broadbeach,QLD,4218,Shop 1.50-1.53 Oasis S/C,12 Charles Ave,,Broadbeach,QLD,4218,Rakesh BARCODES,invoices@choicediscountvariety.com.au,0411 418 450 - Rakesh,Asra Aromas,Free,"Rakesh - Owner 
+Shan - General Manager for all stores 
+shanj@choicediscountvariety.com.au 
+0452 217 426 
+ 
+Kasarah - Approval 
+kasarah@choicethediscountstore.com.au 
+ 
+Barcodes - invoices@choicediscountvariety.com.au","Account Customer - Owns 30+ stores 
+ 
+CHECK APPROVED LIST - Send to Shan and Kasarah for approval IF there are items ordered not on the approved list. 
+ 
+BARCODES",Yes
+2606,CUS000981,Choice The Discount Store Ashmore : Choice The Discount Store Broadbeach,what@choicediscountvariety.com.au,0411 444 555,Discount Store,30 Days,Shop 1.50-1.53 Oasis S/C,12 Charles Ave,,Broadbeach,QLD,4218,Shop 1.50-1.53 Oasis S/C,12 Charles Ave,,Broadbeach,QLD,4218,Shan,accounts@choicediscountvariety.com.au,0452 217 426 - Shan,Asra Aromas,Free,"Rakesh - Owner 
+Shan - General Manager for all stores 
+shanj@choicediscountvariety.com.au 
+0452 217 426 
+ 
+Kasarah - Approval 
+kasarah@choicethediscountstore.com.au 
+ 
+Barcodes - invoices@choicediscountvariety.com.au","Account Customer - Owns 30+ stores 
+ 
+CHECK APPROVED LIST - Send to Shan and Kasarah for approval IF there are items ordered not on the approved list. 
+ 
+BARCODES",Yes
+2606,CUS000981,Choice The Discount Store Ashmore : Choice The Discount Store Broadbeach,what@choicediscountvariety.com.au,0411 444 555,Discount Store,30 Days,Shop 1.50-1.53 Oasis S/C,12 Charles Ave,,Broadbeach,QLD,4218,Shop 1.50-1.53 Oasis S/C,12 Charles Ave,,Broadbeach,QLD,4218,Sales Rep 1,orders@pointaustralia.com.au,,Asra Aromas,Free,"Rakesh - Owner 
+Shan - General Manager for all stores 
+shanj@choicediscountvariety.com.au 
+0452 217 426 
+ 
+Kasarah - Approval 
+kasarah@choicethediscountstore.com.au 
+ 
+Barcodes - invoices@choicediscountvariety.com.au","Account Customer - Owns 30+ stores 
+ 
+CHECK APPROVED LIST - Send to Shan and Kasarah for approval IF there are items ordered not on the approved list. 
+ 
+BARCODES",Yes
+2606,CUS000981,Choice The Discount Store Ashmore : Choice The Discount Store Broadbeach,what@choicediscountvariety.com.au,0411 444 555,Discount Store,30 Days,Shop 1.50-1.53 Oasis S/C,12 Charles Ave,,Broadbeach,QLD,4218,Shop 1.50-1.53 Oasis S/C,12 Charles Ave,,Broadbeach,QLD,4218,Choice The Discount Store Broadbeach,broadbeach@choicediscountvariety.com.au,,Asra Aromas,Free,"Rakesh - Owner 
+Shan - General Manager for all stores 
+shanj@choicediscountvariety.com.au 
+0452 217 426 
+ 
+Kasarah - Approval 
+kasarah@choicethediscountstore.com.au 
+ 
+Barcodes - invoices@choicediscountvariety.com.au","Account Customer - Owns 30+ stores 
+ 
+CHECK APPROVED LIST - Send to Shan and Kasarah for approval IF there are items ordered not on the approved list. 
+ 
+BARCODES",Yes
