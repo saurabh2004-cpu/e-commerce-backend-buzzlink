@@ -10,7 +10,7 @@ const app = express()
 
 //middlewares
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: 'http://localhost:5173',
     credentials: true
 }))
 app.use(cookieParser())
@@ -31,6 +31,9 @@ import pricingGroupsDiscountRoutes from './routes/pricingGroupsDiscount.routes.j
 import texRoutes from './routes/tax.routes.js'
 import deliveryVendorRoutes from './routes/deliveryVendor.routes.js'
 import packsTypesRoutes from './routes/packsTypes.routes.js'
+import productroutes from './routes/products.routes.js'
+import salesOrderroutes from './routes/salesOrder.routes.js'
+import itemBasedDiscountroutes from './routes/itemBasedDiscount.routes.js'
 
 
 
@@ -55,6 +58,12 @@ app.use('/api/v1/tax', texRoutes)
 app.use('/api/v1/delivery-vendor', deliveryVendorRoutes)
 
 app.use('/api/v1/packs-types', packsTypesRoutes)
+
+app.use('/api/v1/products', productroutes)
+
+app.use('/api/v1/sales-order', salesOrderroutes)
+
+app.use('/api/v1/item-based-discount', itemBasedDiscountroutes)
 
 
 export { app }

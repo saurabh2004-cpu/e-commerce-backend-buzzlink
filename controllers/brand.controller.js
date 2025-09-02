@@ -17,7 +17,7 @@ export const createBrand = async (req, res) => {
         const brand = new Brand({ name, slug });
         await brand.save();
 
-        res.json(new ApiResponse(201, brand, "Brand created successfully"));
+        res.json(new ApiResponse(200, brand, "Brand created successfully"));
     } catch (err) {
         throw new ApiError(500, err.message);
     }

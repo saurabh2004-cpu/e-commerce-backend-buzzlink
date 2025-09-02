@@ -9,7 +9,7 @@ const packsTypeSchema = new mongoose.Schema(
       unique: true,
     },
     quantity: {
-      type: Number,
+      type: String,
       required: [true, "Quantity is required"],
       min: [1, "Quantity must be at least 1"],
     },

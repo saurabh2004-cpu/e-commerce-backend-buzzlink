@@ -2,13 +2,13 @@ import mongoose from "mongoose";
 
 const itemBaseddiscountschema = new mongoose.Schema(
     {
-        item: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Item",
+        productSku: {
+            type: String,
             required: true
         },
         customerId: {
-            type: String,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Customer",
             required: true
         },
         percentage: {
@@ -20,3 +20,8 @@ const itemBaseddiscountschema = new mongoose.Schema(
     },
     { timestamps: true }
 );
+
+
+const ItemBasedDiscount = mongoose.model("ItemBasedDiscount", itemBaseddiscountschema);
+
+export default ItemBasedDiscount;
