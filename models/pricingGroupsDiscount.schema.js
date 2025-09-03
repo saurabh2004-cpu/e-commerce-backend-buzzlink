@@ -4,10 +4,14 @@ import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
 const pricingGroupDiscountSchema = new mongoose.Schema(
     {
+        productSku: {
+            type: String,
+            required: true
+        },
         pricingGroup: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "PricingGroups",
-            required: true
+            // required: true
         },
         customerId: {
             type: String,

@@ -21,7 +21,7 @@ const createPricingGroup = async (req, res) => {
             throw new ApiError(500, "Error while creating pricingGroup");
         }
 
-        return res.json(new ApiResponse(201, newPricingGroup, "PricingGroup created successfully"));
+        return res.json(new ApiResponse(200, newPricingGroup, "PricingGroup created successfully"));
 
     } catch (error) {
 
@@ -60,7 +60,7 @@ const updatePricingGroup = async (req, res) => {
     try {
         const { name, slug } = req.body;
 
-        const pricingGroup = await PricingGroups.findOne({ slug });
+        const pricingGroup = await PricingGroups.findById(req.params.id);
 
         if (!pricingGroup) {
             throw new ApiError(404, "PricingGroup not found");

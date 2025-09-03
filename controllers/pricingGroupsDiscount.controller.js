@@ -11,7 +11,7 @@ import aggregatePaginate from "mongoose-aggregate-paginate-v2";
 // Create a new pricing group discount
 const createPricingGroupDiscount = async (req, res) => {
     try {
-        const { pricingGroupId, customerId, percentage } = req.body;
+        const { pricingGroupId, customerId, percentage,productSku } = req.body;
 
         // Validate required fields
         if (!pricingGroupId || !customerId || percentage === undefined) {
@@ -48,16 +48,17 @@ const createPricingGroupDiscount = async (req, res) => {
         // Create new discount
         const discount = await PricingGroupDiscount.create({
             pricingGroup: pricingGroupId,
-            user: customerId,
-            percentage
+            customerId,
+            percentage,
+            productSku
         });
 
         // Populate references
         await discount.populate("pricingGroup");
-        await discount.populate("user", "customerName customerId email");
+        await discount.populate("customerId");
 
-        res.status(201).json(
-            new ApiResponse(201, discount, "Pricing group discount created successfully")
+        res.json(
+            new ApiResponse(200, discount, "Pricing group discount created successfully")
         );
 
     } catch (error) {
@@ -111,7 +112,7 @@ const getPricingGroupDiscountById = async (req, res) => {
 const updatePricingGroupDiscount = async (req, res) => {
     try {
         const { id } = req.params;
-        const { percentage } = req.body;
+        const { percentage, productSku } = req.body;
 
         if (percentage === undefined) {
             throw new ApiError(400, "Percentage is required");
@@ -123,11 +124,11 @@ const updatePricingGroupDiscount = async (req, res) => {
 
         const discount = await PricingGroupDiscount.findByIdAndUpdate(
             id,
-            { percentage },
+            { percentage, productSku },
             { new: true, runValidators: true }
         )
             .populate("pricingGroup", "name slug")
-            .populate("customerId",);
+            .populate("customerId", );
 
         if (!discount) {
             throw new ApiError(404, "Pricing group discount not found");
@@ -190,15 +191,14 @@ const importPricingGroupDiscounts = async (req, res) => {
                 importStats.totalRows = results.length;
                 console.log('=== CSV IMPORT STARTED ===');
                 console.log(`Total rows in CSV: ${importStats.totalRows}`);
-                console.log('Raw CSV data:', JSON.stringify(results, null, 2));
 
                 for (const [index, row] of results.entries()) {
                     try {
-                        const customerId = row['Customer Id'];
+                        const customerId = row['Customer ID'];
                         console.log(`\n=== Processing row ${index}: ${customerId} ===`);
 
                         // Skip header or empty rows
-                        if (!customerId || customerId === 'Customer Id') {
+                        if (!customerId || customerId === 'Customer ID') {
                             console.log('Skipping header or empty row');
                             continue;
                         }
@@ -206,54 +206,44 @@ const importPricingGroupDiscounts = async (req, res) => {
                         importStats.processedCustomers++;
                         console.log(`Processing customer: ${customerId}`);
 
-                        let pricingGroupsProcessed = 0;
+                        let itemsProcessed = 0;
 
-                        // Process each pricing group column
-                        for (let i = 1; i <= 18; i++) {
-                            const pricingGroupName = row[`Customer - Group Pricing ${i} : Pricing Group`];
-                            const percentageStr = row[`Customer - Group Pricing ${i} : Price Level`];
+                        // Process each item pricing column (up to 21 pricing tiers)
+                        for (let i = 1; i <= 21; i++) {
+                            const productSku = row[`Customer - Item Pricing ${i} : Item`];
+                            const percentageStr = row[`Customer - Item Pricing ${i} : Price Level`];
 
-                            // Skip if no data for this pricing group
-                            if (!pricingGroupName || !percentageStr) {
-                                console.log(`Skipping empty pricing group ${i}`);
+                            // Skip if no data for this item
+                            if (!productSku || !percentageStr) {
                                 continue;
                             }
 
-                            console.log(`Processing PG ${i}: ${pricingGroupName} - ${percentageStr}`);
-                            pricingGroupsProcessed++;
+                            console.log(`Processing Item ${i}: ${productSku} - ${percentageStr}`);
+                            itemsProcessed++;
 
-                            // Clean up percentage value (remove % sign if present)
-                            const percentage = parseFloat(percentageStr.replace('%', ''));
+                            // Clean up percentage value (remove % sign if present and handle text values)
+                            let percentage;
+                            if (percentageStr.includes('%')) {
+                                percentage = parseFloat(percentageStr.replace('%', ''));
+                            } else if (percentageStr.toLowerCase() === 'custom') {
+                                // Handle "Custom" pricing - you might want to set a default or skip
+                                percentage = 0; // Or set to a default custom value
+                                console.log(`Custom pricing detected for ${productSku}, setting to 0%`);
+                            } else {
+                                // Try to parse as number
+                                percentage = parseFloat(percentageStr);
+                            }
 
                             // Validate percentage
                             if (isNaN(percentage) || percentage < 0 || percentage > 100) {
-                                console.log(`Invalid percentage for ${pricingGroupName}: ${percentageStr}`);
+                                console.log(`Invalid percentage for ${productSku}: ${percentageStr}`);
                                 importStats.skippedDiscounts++;
                                 continue;
                             }
 
-                            // Find or create pricing group
-                            let pricingGroup = await PricingGroups.findOne({
-                                name: pricingGroupName
-                            });
-
-                            if (!pricingGroup) {
-                                // Create slug from name
-                                const slug = pricingGroupName
-                                    .toLowerCase()
-                                    .replace(/[^a-z0-9]+/g, '-')
-                                    .replace(/(^-|-$)/g, '');
-
-                                pricingGroup = await PricingGroups.create({
-                                    name: pricingGroupName,
-                                    slug
-                                });
-                                console.log(`Created new pricing group: ${pricingGroupName}`);
-                            }
-
-                            // Check if discount already exists for this customer and pricing group
+                            // Check if discount already exists for this customer and product
                             const existingDiscount = await PricingGroupDiscount.findOne({
-                                pricingGroup: pricingGroup._id,
+                                productSku: productSku,
                                 customerId: customerId
                             });
 
@@ -264,37 +254,38 @@ const importPricingGroupDiscounts = async (req, res) => {
                                 existingDiscount.percentage = percentage;
                                 discount = await existingDiscount.save();
                                 importStats.updatedDiscounts++;
-                                console.log(`✓ Updated discount for ${customerId}, ${pricingGroupName}`);
+                                console.log(`✓ Updated discount for ${customerId}, ${productSku}`);
                             } else {
                                 // Create new discount
                                 discount = await PricingGroupDiscount.create({
-                                    pricingGroup: pricingGroup._id,
+                                    productSku: productSku,
                                     customerId: customerId,
-                                    percentage: percentage
+                                    percentage: percentage,
+                                    pricingGroup: null // Since we don't have pricing group info in this CSV
                                 });
                                 importStats.createdDiscounts++;
-                                console.log(`✓ Created discount for ${customerId}, ${pricingGroupName}`);
+                                console.log(`✓ Created discount for ${customerId}, ${productSku}`);
                             }
 
                             // Add ALL processed discounts to the array
                             if (discount) {
                                 const discountWithDetails = {
                                     ...discount.toObject(),
-                                    pricingGroupName: pricingGroupName,
+                                    productSku: productSku,
                                     customerId: customerId
                                 };
                                 allProcessedDiscounts.push(discountWithDetails);
                             }
                         }
 
-                        console.log(`Processed ${pricingGroupsProcessed} pricing groups for ${customerId}`);
+                        console.log(`Processed ${itemsProcessed} items for ${customerId}`);
 
                     } catch (error) {
-                        console.error(`❌ Error processing row ${index} for customer ${row['Customer Id']}:`, error.message);
+                        console.error(`❌ Error processing row ${index} for customer ${row['Customer ID']}:`, error.message);
                         console.error('Error stack:', error.stack);
                         importStats.errors++;
                         importStats.errorDetails.push({
-                            customerId: row['Customer Id'],
+                            customerId: row['Customer ID'],
                             error: error.message,
                             rowIndex: index
                         });
@@ -327,7 +318,6 @@ const importPricingGroupDiscounts = async (req, res) => {
         throw new ApiError(error.statusCode || 500, error.message || "Internal server error");
     }
 };
-
 // Get discounts for a specific user
 const getUserPricingGroupDiscounts = async (req, res) => {
     try {
@@ -347,12 +337,10 @@ const getUserPricingGroupDiscounts = async (req, res) => {
 };
 
 
-// controllers/pricingGroupDiscountController.js
-
 // Export pricing group discounts in the same format as import CSV
 const exportPricingGroupDiscountsCSV = async (req, res) => {
     try {
-        // Get all discounts with populated pricing group info
+        // Fetch all discounts with pricingGroup populated
         const discounts = await PricingGroupDiscount.find()
             .populate("pricingGroup", "name")
             .sort({ customerId: 1, "pricingGroup.name": 1 });
@@ -368,160 +356,62 @@ const exportPricingGroupDiscountsCSV = async (req, res) => {
             if (!discountsByCustomer[customerId]) {
                 discountsByCustomer[customerId] = [];
             }
-            discountsByCustomer[customerId].push({
-                pricingGroupName: discount.pricingGroup.name,
-                percentage: discount.percentage
-            });
+
+            if (discount.pricingGroup) {
+                discountsByCustomer[customerId].push({
+                    pricingGroupName: discount.pricingGroup.name,
+                    percentage: discount.percentage
+                });
+            }
         });
 
-        // Create CSV header matching the import format exactly
+        // Build CSV header - exactly matching the import format
         let csvData = 'Customer Id';
         
-        // Add pricing group columns (up to 18 as per import template)
+        // Add all 18 pricing group columns
         for (let i = 1; i <= 18; i++) {
             csvData += `,Customer - Group Pricing ${i} : Pricing Group,Customer - Group Pricing ${i} : Price Level`;
         }
         csvData += '\n';
 
-        // Process each customer
+        // Build CSV rows
         for (const [customerId, customerDiscounts] of Object.entries(discountsByCustomer)) {
-            let row = customerId;
+            let row = `"${customerId}"`;
             
-            // Add up to 18 pricing groups with their discounts
+            // Fill in all 18 pricing group slots
             for (let i = 0; i < 18; i++) {
                 if (i < customerDiscounts.length) {
                     const discount = customerDiscounts[i];
-                    row += `,"${discount.pricingGroupName.replace(/"/g, '""')}","${discount.percentage}%"`;
+                    row += `,"${discount.pricingGroupName}","${discount.percentage}%"`;
                 } else {
-                    row += ',,'; // Empty columns for missing pricing groups
+                    row += ',,'; // Empty cells for unused pricing groups
                 }
             }
-
+            
             csvData += row + '\n';
         }
 
-        // Set response headers for file download
+        // Add empty rows for customers without discounts (if needed)
+        // This depends on your requirements - if you want to include all customers
+        // even those without discounts, you would need to fetch all customers first
+
+        // Send CSV file as download
         res.setHeader('Content-Type', 'text/csv');
         res.setHeader('Content-Disposition', 'attachment; filename="pricing_group_discounts_export.csv"');
         res.setHeader('Content-Length', Buffer.byteLength(csvData, 'utf8'));
 
-        // Send CSV data
-        res.status(200).send(csvData);
+        return res.send(csvData);
 
     } catch (error) {
+        console.error("CSV export error:", error);
         throw new ApiError(error.statusCode || 500, error.message || "Internal server error");
     }
 };
 
-// Export specific customer's pricing group discounts
-const exportCustomerPricingGroupDiscountsCSV = async (req, res) => {
-    try {
-        const { customerId } = req.params;
 
-        // Get all discounts for this customer with populated pricing group info
-        const discounts = await PricingGroupDiscount.find({ customerId })
-            .populate("pricingGroup", "name")
-            .sort({ "pricingGroup.name": 1 });
 
-        if (!discounts || discounts.length === 0) {
-            throw new ApiError(404, "No pricing group discounts found for this customer");
-        }
 
-        // Create CSV header matching the import format exactly
-        let csvData = 'Customer Id';
-        
-        // Add pricing group columns (up to 18 as per import template)
-        for (let i = 1; i <= 18; i++) {
-            csvData += `,Customer - Group Pricing ${i} : Pricing Group,Customer - Group Pricing ${i} : Price Level`;
-        }
-        csvData += '\n';
 
-        // Start the row with customer ID
-        let row = customerId;
-        
-        // Add up to 18 pricing groups with their discounts
-        for (let i = 0; i < 18; i++) {
-            if (i < discounts.length) {
-                const discount = discounts[i];
-                row += `,"${discount.pricingGroup.name.replace(/"/g, '""')}","${discount.percentage}%"`;
-            } else {
-                row += ',,'; // Empty columns for missing pricing groups
-            }
-        }
-
-        csvData += row + '\n';
-
-        // Set response headers for file download
-        res.setHeader('Content-Type', 'text/csv');
-        res.setHeader('Content-Disposition', `attachment; filename="${customerId}_pricing_discounts_export.csv"`);
-        res.setHeader('Content-Length', Buffer.byteLength(csvData, 'utf8'));
-
-        // Send CSV data
-        res.status(200).send(csvData);
-
-    } catch (error) {
-        throw new ApiError(error.statusCode || 500, error.message || "Internal server error");
-    }
-};
-
-// Export empty template in the same format for manual filling
-const exportPricingGroupDiscountsTemplateCSV = async (req, res) => {
-    try {
-        // Get all pricing groups for reference
-        const pricingGroups = await PricingGroups.find().sort({ name: 1 });
-
-        // Create CSV header matching the import format exactly
-        let csvData = 'Customer Id';
-        
-        // Add pricing group columns (up to 18 as per import template)
-        for (let i = 1; i <= 18; i++) {
-            csvData += `,Customer - Group Pricing ${i} : Pricing Group,Customer - Group Pricing ${i} : Price Level`;
-        }
-        csvData += '\n';
-
-        // Add sample rows with the first few pricing groups
-        const sampleCustomers = [
-            { id: 'CUS001149', discounts: 9 },
-            { id: 'CUS002339', discounts: 18 },
-            { id: 'CUS002403', discounts: 15 },
-            { id: 'CUS005035', discounts: 3 }
-        ];
-
-        for (const sample of sampleCustomers) {
-            let sampleRow = sample.id;
-            
-            for (let i = 0; i < 18; i++) {
-                if (i < pricingGroups.length && i < sample.discounts) {
-                    // Use example percentages: 5%, 10%, 15%, 20% etc.
-                    const examplePercentage = ((i % 4) + 1) * 5;
-                    sampleRow += `,"${pricingGroups[i].name.replace(/"/g, '""')}","${examplePercentage}%"`;
-                } else {
-                    sampleRow += ',,'; // Empty columns
-                }
-            }
-
-            csvData += sampleRow + '\n';
-        }
-
-        // Add instructions
-        csvData += '\n# Instructions:\n';
-        csvData += '# 1. Keep the header format exactly as shown\n';
-        csvData += '# 2. Customer Id format: CUS followed by 6 digits (e.g., CUS001234)\n';
-        csvData += '# 3. Percentage format: Number followed by % sign (e.g., 15%)\n';
-        csvData += '# 4. Empty cells will be ignored during import\n';
-
-        // Set response headers for file download
-        res.setHeader('Content-Type', 'text/csv');
-        res.setHeader('Content-Disposition', 'attachment; filename="pricing_group_discounts_template.csv"');
-        res.setHeader('Content-Length', Buffer.byteLength(csvData, 'utf8'));
-
-        // Send CSV data
-        res.status(200).send(csvData);
-
-    } catch (error) {
-        throw new ApiError(error.statusCode || 500, error.message || "Internal server error");
-    }
-};
 
 export {
     createPricingGroupDiscount,

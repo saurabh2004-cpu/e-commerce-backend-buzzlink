@@ -22,7 +22,7 @@ const createItemBadge = async (req, res) => {
         });
         await badge.save();
 
-        res.json(new ApiResponse(201, badge, "Badge created successfully"));
+        res.json(new ApiResponse(200, badge, "Badge created successfully"));
     } catch (err) {
         throw new ApiError(500, err.message);
     }

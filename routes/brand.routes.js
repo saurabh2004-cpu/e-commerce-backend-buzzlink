@@ -18,6 +18,6 @@ router.route('/get-brand/:id').get(getBrandById);
 
 router.route('/update-brand/:id').put(verifyAdmin, updateBrand);
 
-router.route('/  /:id').delete(verifyAdmin, deleteBrand);
+router.route('/delete-brand/:id').delete(verifyAdmin, deleteBrand);
 
 export default router

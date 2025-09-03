@@ -25,7 +25,7 @@ const createSubCategory = async (req, res) => {
         if (!subCategory) {
             throw new ApiError(500, "Error while creating subCategory");
         }
-        return res.json(new ApiResponse(201, subCategory, "SubCategory created successfully"));
+        return res.json(new ApiResponse(200, subCategory, "SubCategory created successfully"));
     } catch (error) {
         throw new ApiError(500, error.message);
     }
@@ -34,7 +34,7 @@ const createSubCategory = async (req, res) => {
 
 const getSubCategories = async (req, res) => {
     try {
-        const subCategories = await SubCategory.find();
+        const subCategories = await SubCategory.find().populate("category");
 
         if (!subCategories || subCategories.length === 0) {
             return res.json(new ApiResponse(404, null, "SubCategories not found"));

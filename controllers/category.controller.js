@@ -14,7 +14,7 @@ const createCategory = async (req, res) => {
 
         const existing = await Category.findOne({ slug });
         if (existing) {
-            throw new ApiError(400, "Category already exists");
+            return res.json(new ApiResponse(400, null, "Category already exists"));
         }
 
         const category = await Category.create({
@@ -26,7 +26,7 @@ const createCategory = async (req, res) => {
         if (!category) {
             throw new ApiError(500, "Error while creating category");
         }
-        return res.json(new ApiResponse(201, category, "Category created successfully"));
+        return res.json(new ApiResponse(200, category, "Category created successfully"));
 
     } catch (error) {
         throw new ApiError(500, error.message);
@@ -35,7 +35,7 @@ const createCategory = async (req, res) => {
 
 const getCategories = async (req, res) => {
     try {
-        const categories = await Category.find();
+        const categories = await Category.find().populate("brand", "name");
 
         if (!categories || categories.length === 0) {
             return res.json(new ApiResponse(404, null, "Categories not found"));
@@ -49,7 +49,7 @@ const getCategories = async (req, res) => {
 
 const getCategoryById = async (req, res) => {
     try {
-        const category = await Category.findById(req.params.id);
+        const category = await Category.findById(req.params.id).populate("brand");
 
         if (!category) {
             return res.json(new ApiResponse(404, null, "Category not found"));

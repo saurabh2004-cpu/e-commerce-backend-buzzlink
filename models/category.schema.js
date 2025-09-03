@@ -8,12 +8,11 @@ const CategorySchema = new mongoose.Schema(
       trim: true,
       unique: true,
     },
-    brand: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Brand",
-      },
-    ],
+    brand: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Brand",
+    },
+
     slug: {
       type: String,
       required: true,
