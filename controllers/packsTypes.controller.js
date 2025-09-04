@@ -1,5 +1,5 @@
 import PacksType from "../models/packsTypes.schema.js";
-import ApiError from "../utils/ApiError.js";
+import ApiError from "../utils/apiError.js";
 import ApiResponse from "../utils/apiResponse.js";
 
 //  Create PacksType
@@ -7,22 +7,30 @@ const createPacksType = async (req, res, next) => {
     try {
         const { name, quantity } = req.body;
 
+
         if (!name || !quantity) {
             throw new ApiError(400, "Name and Quantity are required");
         }
 
         const exists = await PacksType.findOne({ name });
+
+        
         if (exists) {
-            throw new ApiError(400, "Pack type with this name already exists");
+            return res.json(new ApiResponse(400, null, "PacksType with this name already exists"));
         }
+
 
         const pack = await PacksType.create({ name, quantity });
 
-        res
-            .status(201)
-            .json(new ApiResponse(201, pack, "PacksType created successfully"));
+
+        if(!pack){
+            throw new ApiError(400, "Failed to create PacksType");
+        }
+
+        res.json(new ApiResponse(200, pack, "PacksType created successfully"));
     } catch (error) {
-        next(error);
+        throw new ApiError(500, "Internal Server Error", error)
+
     }
 };
 

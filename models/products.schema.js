@@ -43,10 +43,10 @@ const productSchema = new mongoose.Schema(
             default: 0,
             min: 0
         },
-        typesOfPacks: {
+        typesOfPacks: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "PacksType",
-        },
+        }],
         excludedUnitsOnStore: [{
             type: [mongoose.Schema.Types.ObjectId],
             ref: "PacksType",
@@ -57,7 +57,7 @@ const productSchema = new mongoose.Schema(
             ref: "PricingGroups",
             required: true
         },
-        
+
         displayInWebsite: {
             type: Boolean,
             default: true
@@ -94,12 +94,12 @@ const productSchema = new mongoose.Schema(
             type: String,
             trim: true
         },
-        slug: {
-            type: String,
-            unique: true,
-            lowercase: true,
-            trim: true
-        }
+        // slug: {
+        //     type: String,
+        //     unique: true,
+        //     lowercase: true,
+        //     trim: true
+        // }
     },
     {
         timestamps: true,

@@ -28,7 +28,7 @@
     import badgeRoutes from './routes/badge.routes.js'
     import pricingGroupsRoutes from './routes/pricingGroups.routes.js'
     import pricingGroupsDiscountRoutes from './routes/pricingGroupsDiscount.routes.js'
-    import texRoutes from './routes/tax.routes.js'
+    import taxRoutes from './routes/tax.routes.js'
     import deliveryVendorRoutes from './routes/deliveryVendor.routes.js'
     import packsTypesRoutes from './routes/packsTypes.routes.js'
     import productroutes from './routes/products.routes.js'
@@ -43,23 +43,23 @@
 
     app.use('/api/v1/brand', brandRoutes)  //done
 
-    app.use('/api/v1/category', categoryRoutes)
+    app.use('/api/v1/category', categoryRoutes)  //done
 
     app.use('/api/v1/subcategory', subCategoryRoutes)
 
-    app.use('/api/v1/badge', badgeRoutes)
+    app.use('/api/v1/badge', badgeRoutes) //done
 
-    app.use('/api/v1/pricing-groups', pricingGroupsRoutes)
+    app.use('/api/v1/pricing-groups', pricingGroupsRoutes) //done
 
-    app.use('/api/v1/pricing-groups-discount', pricingGroupsDiscountRoutes)
+    app.use('/api/v1/pricing-groups-discount', pricingGroupsDiscountRoutes) //done
 
-    app.use('/api/v1/tax', texRoutes)
+    app.use('/api/v1/tax', taxRoutes) //done
 
-    app.use('/api/v1/delivery-vendor', deliveryVendorRoutes)
+    app.use('/api/v1/delivery-vendor', deliveryVendorRoutes) //done
 
-    app.use('/api/v1/packs-types', packsTypesRoutes)
+    app.use('/api/v1/packs-types', packsTypesRoutes) //done
 
-    app.use('/api/v1/products', productroutes)
+    app.use('/api/v1/products', productroutes) //done
 
     app.use('/api/v1/sales-order', salesOrderroutes)
 

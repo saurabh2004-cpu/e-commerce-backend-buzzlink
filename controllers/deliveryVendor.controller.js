@@ -18,7 +18,7 @@ const createDeliveryVendor = async (req, res) => {
 
         await newVendor.save();
 
-        res.json(new ApiResponse(201, newVendor, "Vendor created successfully"));
+        res.json(new ApiResponse(200, newVendor, "Vendor created successfully"));
     } catch (error) {
         throw new ApiError(error.statusCode || 500, error.message || "Internal server error");
     }

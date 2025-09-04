@@ -9,24 +9,19 @@ import ApiResponse from "../utils/apiResponse.js";
 import ApiError from "../utils/apiError.js";
 import csv from "csv-parser";
 import fs from "fs";
+import mongoose from "mongoose";
 
 // Create a new product
 const createProduct = async (req, res) => {
     try {
         const {
-            internalId,
+            // internalId,
             sku,
             ProductName,
             eachPrice,
-            type,
-            primaryUnitsType,
-            sellingUOMUnit,
             stockLevel,
             typesOfPacks,
-            excludedUnitsOnStore,
             pricingGroup,
-            displayInWebsite,
-            inactive,
             commerceCategoriesOne,
             commerceCategoriesTwo,
             commerceCategoriesThree,
@@ -35,6 +30,9 @@ const createProduct = async (req, res) => {
             eachBarcodes,
             packBarcodes
         } = req.body;
+
+
+        console.log("Creating product:", req.body);
 
         // Validate required fields
         if (!sku || !ProductName || eachPrice === undefined || !pricingGroup) {
@@ -77,48 +75,48 @@ const createProduct = async (req, res) => {
             }
         }
 
+        let packTypesObjects = [];
         if (typesOfPacks) {
-            const packsTypeExists = await PacksType.findById(typesOfPacks);
-            if (!packsTypeExists) {
-                throw new ApiError(400, "Packs Type not found");
+            for (const pack of typesOfPacks) {
+                const objectId = mongoose.Types.ObjectId.isValid(pack) ? pack : null;
+                const packsTypeExists = await PacksType.findById(objectId);
+                if (!packsTypeExists) {
+                    throw new ApiError(400, "Packs Type not found");
+                }
+                packTypesObjects.push(packsTypeExists._id);
             }
         }
 
+        console.log("Pack Types Objects:", packTypesObjects);
+
         // Create new product
         const product = await Product.create({
-            internalId: internalId?.trim(),
             sku: sku.toUpperCase().trim(),
             ProductName: ProductName.trim(),
             eachPrice: parseFloat(eachPrice),
-            type: type?.trim() || "Inventory Item",
-            primaryUnitsType: primaryUnitsType?.trim(),
-            sellingUOMUnit: sellingUOMUnit?.trim(),
             stockLevel: parseInt(stockLevel) || 0,
-            typesOfPacks: typesOfPacks,
-            excludedUnitsOnStore: Array.isArray(excludedUnitsOnStore) ? excludedUnitsOnStore.map(u => u?.trim()) : [],
+            typesOfPacks: packTypesObjects,
             pricingGroup: pricingGroup,
-            displayInWebsite: displayInWebsite !== undefined ? displayInWebsite : true,
-            inactive: inactive !== undefined ? inactive : false,
             commerceCategoriesOne: commerceCategoriesOne,
             commerceCategoriesTwo: commerceCategoriesTwo,
             commerceCategoriesThree: commerceCategoriesThree,
             storeDescription: storeDescription?.trim(),
             pageTitle: pageTitle?.trim(),
-            eachBarcodes:eachBarcodes?.trim(),
+            eachBarcodes: eachBarcodes?.trim(),
             packBarcodes: packBarcodes?.trim()
         });
 
         // Populate references for response
         await product.populate([
-            { path: 'pricingGroup', select: 'name slug' },
-            { path: 'commerceCategoriesOne', select: 'name slug' },
-            { path: 'commerceCategoriesTwo', select: 'name slug' },
-            { path: 'commerceCategoriesThree', select: 'name slug' },
-            { path: 'typesOfPacks', select: 'name' }
+            { path: 'pricingGroup' },
+            { path: 'commerceCategoriesOne' },
+            { path: 'commerceCategoriesTwo' },
+            { path: 'commerceCategoriesThree' },
+            { path: 'typesOfPacks' }
         ]);
 
         res.status(201).json(
-            new ApiResponse(201, product, "Product created successfully")
+            new ApiResponse(200, product, "Product created successfully")
         );
 
     } catch (error) {
@@ -459,20 +457,20 @@ const importProducts = async (req, res) => {
         // Read the CSV file manually to handle the specific format
         const fileContent = fs.readFileSync(file.path, 'utf8');
         const lines = fileContent.split('\n').filter(line => line.trim() !== '');
-        
+
         // Skip the first two header rows
         const dataRows = lines.slice(2);
-        
+
         for (const [index, row] of dataRows.entries()) {
             try {
                 // Parse CSV row manually (since your CSV has quoted fields with commas)
                 const columns = [];
                 let currentColumn = '';
                 let inQuotes = false;
-                
+
                 for (let i = 0; i < row.length; i++) {
                     const char = row[i];
-                    
+
                     if (char === '"') {
                         inQuotes = !inQuotes;
                     } else if (char === ',' && !inQuotes) {
@@ -483,12 +481,12 @@ const importProducts = async (req, res) => {
                     }
                 }
                 columns.push(currentColumn.trim());
-                
+
                 // Skip empty rows
                 if (columns.length < 5 || !columns[1] || columns[1] === 'Name') {
                     continue;
                 }
-                
+
                 const internalId = columns[0];
                 const sku = columns[1];
                 const productName = columns[2];
@@ -537,7 +535,7 @@ const importProducts = async (req, res) => {
                     pricingGroupDoc = await PricingGroups.findOne({
                         name: { $regex: new RegExp(pricingGroupName.trim(), "i") }
                     });
-                    
+
                     if (!pricingGroupDoc) {
                         pricingGroupDoc = await PricingGroups.create({
                             name: pricingGroupName.trim(),
@@ -553,7 +551,7 @@ const importProducts = async (req, res) => {
                     brandDoc = await Brand.findOne({
                         name: { $regex: new RegExp(commerceLevel1.trim(), "i") }
                     });
-                    
+
                     if (!brandDoc) {
                         brandDoc = await Brand.create({
                             name: commerceLevel1.trim(),
@@ -569,7 +567,7 @@ const importProducts = async (req, res) => {
                     categoryDoc = await Category.findOne({
                         name: { $regex: new RegExp(commerceLevel2.trim(), "i") }
                     });
-                    
+
                     if (!categoryDoc) {
                         categoryDoc = await Category.create({
                             name: commerceLevel2.trim(),
@@ -585,7 +583,7 @@ const importProducts = async (req, res) => {
                     subCategoryDoc = await SubCategory.findOne({
                         name: { $regex: new RegExp(commerceLevel3.trim(), "i") }
                     });
-                    
+
                     if (!subCategoryDoc) {
                         subCategoryDoc = await SubCategory.create({
                             name: commerceLevel3.trim(),
@@ -603,7 +601,7 @@ const importProducts = async (req, res) => {
                         packsTypeDoc = await PacksType.findOne({
                             name: { $regex: new RegExp(packTypeName, "i") }
                         });
-                        
+
                         if (!packsTypeDoc) {
                             packsTypeDoc = await PacksType.create({
                                 name: packTypeName,
@@ -622,7 +620,7 @@ const importProducts = async (req, res) => {
                         const unitDoc = await PacksType.findOne({
                             name: { $regex: new RegExp(unitName, "i") }
                         });
-                        
+
                         if (!unitDoc) {
                             const newUnitDoc = await PacksType.create({
                                 name: unitName,
@@ -638,7 +636,7 @@ const importProducts = async (req, res) => {
 
                 // --- UPSERT PRODUCT ---
                 const existingProduct = await Product.findOne({ sku: cleanSku });
-                
+
                 if (existingProduct) {
                     // Update existing product
                     existingProduct.internalId = internalId;

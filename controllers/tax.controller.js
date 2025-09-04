@@ -34,7 +34,7 @@ const createTax = async (req, res) => {
         });
 
         res.status(201).json(
-            new ApiResponse(201, tax, "Tax created successfully")
+            new ApiResponse(200, tax, "Tax created successfully")
         );
 
     } catch (error) {
